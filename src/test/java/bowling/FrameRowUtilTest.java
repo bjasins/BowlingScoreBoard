@@ -1,14 +1,27 @@
 package bowling;
 
-public class FrameRowTest {
-    private FrameRow frameRow;
+import org.junit.After;
+import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
+import pojos.FrameRow;
+
+public class FrameRowUtilTest {
+    private FrameRowUtil frameRowUtil;
+    @Mock
+    private FrameRow mockFrameRow;
+
+    @Before
     public void setup() {
-        frameRow = new FrameRow();
+        frameRowUtil = new FrameRowUtil();
+        mockFrameRow = Mockito.mock(FrameRow.class);
     }
 
+    @After
     public void tearDown() {
-        frameRow = null;
+        frameRowUtil = null;
+        mockFrameRow = null;
     }
 
     public void testIsRowCompleteTrue() {

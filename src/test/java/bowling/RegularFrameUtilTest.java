@@ -1,18 +1,30 @@
 package bowling;
-public class TenthFrameTest {
-    
-    private TenthFrame tenthFrame;
 
+import org.mockito.Mock;
+import org.mockito.Mockito;
+
+import pojos.RegularFrame;
+
+public class RegularFrameUtilTest {
+    private RegularFrameUtil regularFrameUtil;
+    @Mock
+    private RegularFrame mockRegularFrame;
+
+    @Before
     public void setup() {
-        tenthFrame = new TenthFrame();
+        regularFrameUtil = new RegularFrameUtil();
+        mockRegularFrame = Mockito.mock(RegularFrame.class);
     }
 
+    @After
     public void tearDown() {
-        tenthFrame = null;
+        regularFrameUtil = null;
+        mockRegularFrame = null;
     }
 
     public void testIsFrameCompleteTrue() {
         //TODO
+        
     }
 
     public void testIsFrameCompleteFalse() {

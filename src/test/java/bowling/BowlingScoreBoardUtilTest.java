@@ -1,14 +1,25 @@
 package bowling;
 
-public class BowlingScoreBoaredTest {
-    private BowlingScoreBoared bowlingScoreBoared;
+import org.junit.After;
+import org.junit.Before;
+import org.mockito.*;
+import pojos.BowlingScoreBoard;
 
+public class BowlingScoreBoardUtilTest {
+    private BowlingScoreBoardUtil bowlingScoreBoardUtil;
+    @Mock
+    private BowlingScoreBoard mockBowlingScoreBoard;
+
+    @Before
     public void setup() {
-        bowlingScoreBoared = new BowlingScoreBoared();
+        bowlingScoreBoardUtil = new BowlingScoreBoardUtil();
+        mockBowlingScoreBoard = Mockito.mock(BowlingScoreBoard.class);
     }
 
+    @After
     public void tearDown() {
-        bowlingScoreBoared = null;
+        bowlingScoreBoardUtil = null;
+        mockBowlingScoreBoard = null;
     }
 
     public void testIsGameCompleteTrue() {

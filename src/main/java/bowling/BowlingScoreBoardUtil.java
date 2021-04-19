@@ -8,14 +8,14 @@ import pojos.RegularFrame;
 import pojos.TenthFrame;
 
 /**
- * The interactive layer of the bowling scoreboard where basic input options are
- * made publicly available.
+ * Provides the functionality for interacting with a {@link BowlingScoreBoard}.
  */
 public class BowlingScoreBoardUtil {
 
     private static final FrameRowUtil FRAME_ROW_UTIL = new FrameRowUtil();
 
     /**
+     * @param bowlingScoreBoared the {@link BowlingScoreBoard} to evaluate.
      * @return a boolean indicating if all players have completed their frame rows.
      */
     public final boolean isGameComplete(BowlingScoreBoard bowlingScoreBoared) {
@@ -30,9 +30,14 @@ public class BowlingScoreBoardUtil {
     /**
      * Add a player to the game.
      * 
-     * @param playerName the name of the player.
+     * @param bowlingScoreBoared the {@link BowlingScoreBoard} to evaluate.
+     * @param playerName         the name of the player.
+     * @throws {@code IllegalArgumentException} when invalid player name provided.
+     * @throws {@code IllegalStateException} when the max players allowed are
+     * already present.
      */
-    public void addPlayer(BowlingScoreBoard bowlingScoreBoared, String playerName) throws IllegalArgumentException, IllegalStateException {
+    public void addPlayer(BowlingScoreBoard bowlingScoreBoared, String playerName)
+            throws IllegalArgumentException, IllegalStateException {
         if (playerName == null || playerName.isBlank()) {
             throw new IllegalArgumentException("Player name cannot be blank");
         }
@@ -50,7 +55,10 @@ public class BowlingScoreBoardUtil {
     /**
      * Input the result of a roll belonging to the current player.
      * 
-     * @param rollResult an int representing the score of the roll.
+     * @param bowlingScoreBoared the {@link BowlingScoreBoard} to evaluate.
+     * @param rollResult         an int representing the score of the roll.
+     * @throws {@link BowlingScoreBoardException} if an error occurs during
+     *                processing.
      */
     public void inputRoll(BowlingScoreBoard bowlingScoreBoared, int rollResult) throws BowlingScoreBoardException {
         // check valid
@@ -60,25 +68,37 @@ public class BowlingScoreBoardUtil {
             Frame frame = currentPlayer.getPlayerFrames().getCurrentFrame();
             if (frame instanceof TenthFrame) {
                 TenthFrameUtil tenthFrameUtil = new TenthFrameUtil();
-                if (tenthFrameUtil.isFrameComplete((TenthFrame)(frame))) {
+                if (tenthFrameUtil.isFrameComplete((TenthFrame) (frame))) {
                     if (FRAME_ROW_UTIL.getSize(currentPlayer.getPlayerFrames()) < 10) {
                         FRAME_ROW_UTIL.startNewFrame(currentPlayer.getPlayerFrames());
                     }
-                    bowlingScoreBoared.changeTurn();
+                    changeTurn(bowlingScoreBoared);
                 }
-            }
-            else {
+            } else {
                 RegularFrameUtil regularFrameUtil = new RegularFrameUtil();
-                if (regularFrameUtil.isFrameComplete((RegularFrame)(frame))) {
+                if (regularFrameUtil.isFrameComplete((RegularFrame) (frame))) {
                     if (FRAME_ROW_UTIL.getSize(currentPlayer.getPlayerFrames()) < 10) {
                         FRAME_ROW_UTIL.startNewFrame(currentPlayer.getPlayerFrames());
                     }
-                    bowlingScoreBoared.changeTurn();
+                    changeTurn(bowlingScoreBoared);
                 }
             }
 
         } catch (RuntimeException e) {
             throw new BowlingScoreBoardException("Exception encountered while processing roll");
+        }
+    }
+
+    /**
+     * Rotate the responsibility of active player.
+     * 
+     * @param bowlingScoreBoared the {@link BowlingScoreBoard} to evaluate.
+     */
+    private void changeTurn(BowlingScoreBoard bowlingScoreBoard) {
+        if (bowlingScoreBoard.getPlayerTurnIndex() == bowlingScoreBoard.getPlayers().size() - 1) {
+            bowlingScoreBoard.resetPlayerTurnIndex();
+        } else {
+            bowlingScoreBoard.incrementPlayerTurnIndex();
         }
     }
 }

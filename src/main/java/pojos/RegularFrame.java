@@ -6,9 +6,11 @@ import interfaces.Frame;
 import java.util.List;
 
 /**
- * TODO.
+ * An implementation of {@link Frame} meant to represent one of the first nine
+ * frames in a bowling row. This implementation is characterized by the limit of
+ * only two rolls.
  */
-public class RegularFrame  implements Frame{
+public class RegularFrame implements Frame {
 
     private static final int MAX_ROLLS_ALLOWED = 2;
     private final List<Integer> rollResultList;
@@ -28,7 +30,7 @@ public class RegularFrame  implements Frame{
     }
 
     @Override
-    public void addRowResult(int rowResult) {
+    public void addRollResult(int rowResult) {
         rollResultList.add(rowResult);
     }
 }

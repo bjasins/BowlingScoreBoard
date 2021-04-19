@@ -2,16 +2,14 @@ package bowling;
 
 import java.util.List;
 
-import interfaces.Frame;
 import interfaces.FrameUtil;
 import pojos.TenthFrame;
 
 /**
- * An implementation of {@link Frame} meant to represent the tenth frame in a
- * bowling row. This implementation is characterized by the initial limit of two
- * rolls, with a third roll possible.
+ * An implementation of {@link FrameUtil} for the processing of a
+ * {@link TenthFrame} frame in a bowling row.
  */
-public class TenthFrameUtil implements FrameUtil<TenthFrame> { //TODO force type
+public class TenthFrameUtil implements FrameUtil<TenthFrame> {
 
     @Override
     public boolean isFrameComplete(TenthFrame tenthFrame) {
@@ -19,7 +17,8 @@ public class TenthFrameUtil implements FrameUtil<TenthFrame> { //TODO force type
         if (rollResultList.size() == tenthFrame.getMaxRollsAllowed()) {
             return true;
         }
-        if (rollResultList.size() == tenthFrame.getNormalRollsAllowed() && getFinalFrameScore(tenthFrame) < tenthFrame.getMinimumScoreToUnlockMaxRolls()) {
+        if (rollResultList.size() == tenthFrame.getNormalRollsAllowed()
+                && getFinalFrameScore(tenthFrame) < tenthFrame.getMinimumScoreToUnlockMaxRolls()) {
             return true;
         }
 
@@ -33,11 +32,13 @@ public class TenthFrameUtil implements FrameUtil<TenthFrame> { //TODO force type
 
     @Override
     public boolean isFrameSpare(TenthFrame tenthFrame) {
-        return tenthFrame.getRollResultList().size() > 1 && tenthFrame.getRollResultList().get(0) + tenthFrame.getRollResultList().get(1) == 10;
+        return tenthFrame.getRollResultList().size() > 1
+                && tenthFrame.getRollResultList().get(0) + tenthFrame.getRollResultList().get(1) == 10;
     }
 
     @Override
-    public void enterRollResult(TenthFrame tenthFrame, int rollResult) throws IllegalArgumentException, IllegalStateException {
+    public void enterRollResult(TenthFrame tenthFrame, int rollResult)
+            throws IllegalArgumentException, IllegalStateException {
         if (isFrameComplete(tenthFrame)) {
             throw new IllegalStateException("Frame has already been completed");
         }

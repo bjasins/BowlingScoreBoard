@@ -6,9 +6,8 @@ import interfaces.FrameUtil;
 import pojos.RegularFrame;
 
 /**
- * An implementation of {@link FrameUtil} meant to represent one of the first nine
- * frames in a bowling row. This implementation is characterized by the limit of
- * only two rolls.
+ * An implementation of {@link FrameUtil} for the processing of a
+ * {@link RegularFrame} in a bowling row.
  */
 public class RegularFrameUtil implements FrameUtil<RegularFrame> {
 
@@ -36,21 +35,16 @@ public class RegularFrameUtil implements FrameUtil<RegularFrame> {
         return getFinalFrameScore(regularFrame) == 10 && rollResultList.size() == 2;
     }
 
-    // @Override
-    // public List<Integer> getRollResultList(Frame regularFrame) {
-    //     List<Integer> rollResultList = regularFrame.getRollResultList();
-    //     return rollResultList;
-    // }
-
     @Override
-    public void enterRollResult(RegularFrame regularFrame, int rollResult) throws IllegalArgumentException, IllegalStateException {
+    public void enterRollResult(RegularFrame regularFrame, int rollResult)
+            throws IllegalArgumentException, IllegalStateException {
         if (isFrameComplete(regularFrame)) {
             throw new IllegalStateException("Frame has already been completed");
         }
         if (rollResult < 0 || rollResult > 10) {
             throw new IllegalArgumentException("Individual frame roll must result in 0-10 pins");
         }
-        regularFrame.addRowResult(rollResult);
+        regularFrame.addRollResult(rollResult);
     }
 
 }

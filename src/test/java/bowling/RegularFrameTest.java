@@ -4,7 +4,7 @@ public class RegularFrameTest {
     private RegularFrame regularFrame;
 
     public void setup() {
-        regularFrame = new RegularFrame();
+        regularFrame = new Mock(RegularFrame.class);
     }
 
     public void tearDown() {
@@ -13,6 +13,7 @@ public class RegularFrameTest {
 
     public void testIsFrameCompleteTrue() {
         //TODO
+        
     }
 
     public void testIsFrameCompleteFalse() {

@@ -3,7 +3,7 @@ package interfaces;
 import java.util.List;
 
 /**
- * An interface that defines the common functionality for a bowling frame.
+ * TODO
  */
 public interface Frame {
 
@@ -12,34 +12,7 @@ public interface Frame {
      */
     public List<Integer> getRollResultList();
 
-    /**
-     * @return a boolean signifying if the frame has been completed.
-     */
-    public boolean isFrameComplete();
+    public int getMaxRollsAllowed();
 
-    /**
-     * @return a boolean signifying if the result of the frame was a strike.
-     */
-    public boolean isFrameStrike();
-
-    /**
-     * @return a boolean signifying if the result of the frame was a spare.
-     */
-    public boolean isFrameSpare();
-
-    /**
-     * Input the result of a singular roll into the frame.
-     * 
-     * @param rollResult an int representing the score of a roll.
-     */
-    public void enterRollResult(int rollResult);
-
-    /**
-     * Sums the total score of the frame.
-     * 
-     * @return an int representing the frame score.
-     */
-    default int getFinalFrameScore() {
-        return getRollResultList().stream().mapToInt(Integer::intValue).sum();
-    }
+    public void addRowResult(int rowResult);
 }

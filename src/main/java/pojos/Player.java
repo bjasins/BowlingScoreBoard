@@ -1,4 +1,6 @@
-package bowling;
+package pojos;
+
+import bowling.FrameRowUtil;
 
 /**
  * A POJO meant to represent an individual player.
@@ -8,7 +10,7 @@ public class Player {
     private final String name;
     private final FrameRow frames;
 
-    Player(String name) {
+    public Player(String name) {
         this.name = name;
         frames = new FrameRow();
     }
@@ -17,7 +19,8 @@ public class Player {
      * @return the total score of the player.
      */
     public int getScore() {
-        return frames.getTotalScore();
+        FrameRowUtil frameRowUtil = new FrameRowUtil();
+        return frameRowUtil.getTotalScore(frames);
     }
 
     /**
@@ -30,7 +33,7 @@ public class Player {
     /**
      * @return the {@link FrameRow} of the player.
      */
-    protected FrameRow getPlayerFrames() {
+    public FrameRow getPlayerFrames() {
         return frames;
     }
 }

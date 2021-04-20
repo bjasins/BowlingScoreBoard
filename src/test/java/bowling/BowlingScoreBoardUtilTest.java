@@ -2,8 +2,12 @@ package bowling;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -13,16 +17,20 @@ import org.mockito.*;
 
 import exceptions.BowlingScoreBoardException;
 import pojos.BowlingScoreBoard;
+import pojos.FrameRow;
 import pojos.Player;
 
 public class BowlingScoreBoardUtilTest {
     private BowlingScoreBoardUtil bowlingScoreBoardUtil;
     @Mock
     private BowlingScoreBoard mockBowlingScoreBoard;
+    @Mock
+    private FrameRowUtil mockFrameRowUtil;
 
     @Before
     public void setup() {
-        bowlingScoreBoardUtil = new BowlingScoreBoardUtil();
+        mockFrameRowUtil = Mockito.mock(FrameRowUtil.class);
+        bowlingScoreBoardUtil = new BowlingScoreBoardUtil(mockFrameRowUtil);
         mockBowlingScoreBoard = Mockito.mock(BowlingScoreBoard.class);
         when(mockBowlingScoreBoard.getMaxPlayers()).thenReturn(1);
     }
@@ -31,17 +39,26 @@ public class BowlingScoreBoardUtilTest {
     public void tearDown() {
         bowlingScoreBoardUtil = null;
         mockBowlingScoreBoard = null;
+        mockFrameRowUtil = null;
     }
     @Test
     public void testIsGameCompleteTrue() {
-        List<Player> mockPlayers; //populate 1
-        //mockplayer row complete
+        Player mockPlayer = Mockito.mock(Player.class);
+        List<Player> mockPlayers = Arrays.asList(mockPlayer);
+        FrameRow mockFrameRow = Mockito.mock(FrameRow.class);
+        when(mockPlayer.getPlayerFrames()).thenReturn(mockFrameRow);
+        when(mockFrameRowUtil.isRowComplete(mockFrameRow)).thenReturn(true);
+        when(mockBowlingScoreBoard.getPlayers()).thenReturn(mockPlayers);
         assertTrue(bowlingScoreBoardUtil.isGameComplete(mockBowlingScoreBoard));
     }
     @Test
     public void testIsGameCompleteFalse() {
-        List<Player> mockPlayers; //populate 1
-        //mockplayer row not complete
+        Player mockPlayer = Mockito.mock(Player.class);
+        List<Player> mockPlayers = Arrays.asList(mockPlayer);
+        FrameRow mockFrameRow = Mockito.mock(FrameRow.class);
+        when(mockPlayer.getPlayerFrames()).thenReturn(mockFrameRow);
+        when(mockFrameRowUtil.isRowComplete(mockFrameRow)).thenReturn(false);
+        when(mockBowlingScoreBoard.getPlayers()).thenReturn(mockPlayers);
         assertFalse(bowlingScoreBoardUtil.isGameComplete(mockBowlingScoreBoard));
     }
     @Test(expected = IllegalArgumentException.class)
@@ -54,21 +71,32 @@ public class BowlingScoreBoardUtilTest {
     }
     @Test(expected = IllegalStateException.class)
     public void testAddPlayerMaxPlayers() {
-        //populate 1 player
+        Player mockPlayer = Mockito.mock(Player.class);
+        List<Player> mockPlayers = Arrays.asList(mockPlayer);
+        when(mockBowlingScoreBoard.getPlayers()).thenReturn(mockPlayers);
         bowlingScoreBoardUtil.addPlayer(mockBowlingScoreBoard, "Fred");
     }
     @Test
     public void testAddPlayer() {
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockBowlingScoreBoard.getPlayers()).thenReturn(Arrays.asList(mockPlayer));
+        when(mockBowlingScoreBoard.getMaxPlayers()).thenReturn(2);
         bowlingScoreBoardUtil.addPlayer(mockBowlingScoreBoard, "Fred");
-        //verify
+        verify(mockBowlingScoreBoard).addPlayer(any(Player.class));
+        verify(mockBowlingScoreBoard).resetPlayerTurnIndex();
     }
     @Test(expected = BowlingScoreBoardException.class)
-    public void testInputRollInvalidEntry() {
-        // TODO
+    public void testInputRollInvalidEntry() throws BowlingScoreBoardException {
+        bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 12);
     }
     @Test(expected = BowlingScoreBoardException.class)
     public void testInputRollFrameComplete() {
-        // TODO
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockBowlingScoreBoard.getCurrentPlayer()).thenReturn(mockPlayer);
+        FrameRow mockFrameRow = Mockito.mock(FrameRow.class);
+        when(mockPlayer.getPlayerFrames()).thenReturn(mockFrameRow);
+        when(mockFrameRowUtil.playerRoll(mockFrameRow, anyInt())).thenThrow(new IllegalStateException());
+        bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 5);
     }
     @Test
     public void testInputRollFrameCompleteTenth() {

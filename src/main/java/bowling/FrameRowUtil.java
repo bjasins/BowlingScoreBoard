@@ -9,8 +9,13 @@ import pojos.TenthFrame;
  * Provides the functionality for interacting with a {@link FrameRow}.
  */
 public class FrameRowUtil {
-    private static final RegularFrameUtil regularFrameUtil = new RegularFrameUtil(); // make static names
-    private static final TenthFrameUtil tenthFrameUtil = new TenthFrameUtil();
+    private final RegularFrameUtil regularFrameUtil;
+    private final TenthFrameUtil tenthFrameUtil;
+
+    public FrameRowUtil(RegularFrameUtil regularFrameUtil, TenthFrameUtil tenthFrameUtil) {
+        this.regularFrameUtil = regularFrameUtil;
+        this.tenthFrameUtil = tenthFrameUtil;
+    }
 
     /**
      * @param frameRow the {@code FrameRow} to evaluate.
@@ -98,8 +103,13 @@ public class FrameRowUtil {
      * @param rollResult an int representing the score of the roll.
      * @throws {@code IllegalStateException} if the frame has already been
      * completed.
+     * @throws {@code IllegalArgumentException} if the roll score is not
+     * within a valid range.
      */
-    protected void playerRoll(FrameRow framerow, int rollResult) throws IllegalStateException {
+    protected void playerRoll(FrameRow framerow, int rollResult) throws IllegalStateException, IllegalArgumentException {
+        if (rollResult < 0 || rollResult > 10) {
+            throw new IllegalArgumentException("Invalid score for the roll");
+        }
         Frame frame = framerow.getFrames().get(framerow.getActiveFrameIndex());
         if (frame instanceof TenthFrame) {
             if (tenthFrameUtil.isFrameComplete((TenthFrame) frame)) {
@@ -142,11 +152,7 @@ public class FrameRowUtil {
         }
         Frame frame = framerow.getFrames().get(startIndex + 1);
         if (frame instanceof TenthFrame) {
-            if (numberToLookForward == 2 && tenthFrameUtil.isFrameStrike((TenthFrame) frame)) {
-                return 10 + peakNextFrame(framerow, startIndex + 1, 1);
-            }
-            return numberToLookForward == 2 ? tenthFrameUtil.getFinalFrameScore((TenthFrame) frame)
-                    : frame.getRollResultList().get(0);
+            return numberToLookForward == 2 ? frame.getRollResultList().get(0) + frame.getRollResultList().get(1) : frame.getRollResultList().get(0);
         } else {
             if (numberToLookForward == 2 && regularFrameUtil.isFrameStrike((RegularFrame) frame)) {
                 return 10 + peakNextFrame(framerow, startIndex + 1, 1);

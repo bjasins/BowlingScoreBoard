@@ -12,7 +12,11 @@ import pojos.TenthFrame;
  */
 public class BowlingScoreBoardUtil {
 
-    private static final FrameRowUtil FRAME_ROW_UTIL = new FrameRowUtil();
+    private final FrameRowUtil frameRowUtil;
+
+    public BowlingScoreBoardUtil(FrameRowUtil frameRowUtil) {
+        this.frameRowUtil = frameRowUtil;
+    }
 
     /**
      * @param bowlingScoreBoared the {@link BowlingScoreBoard} to evaluate.
@@ -20,7 +24,7 @@ public class BowlingScoreBoardUtil {
      */
     public final boolean isGameComplete(BowlingScoreBoard bowlingScoreBoared) {
         for (Player player : bowlingScoreBoared.getPlayers()) {
-            if (!FRAME_ROW_UTIL.isRowComplete(player.getPlayerFrames())) {
+            if (!frameRowUtil.isRowComplete(player.getPlayerFrames())) {
                 return false;
             }
         }
@@ -61,24 +65,26 @@ public class BowlingScoreBoardUtil {
      *                processing.
      */
     public void inputRoll(BowlingScoreBoard bowlingScoreBoared, int rollResult) throws BowlingScoreBoardException {
-        // check valid
         try {
+            if (rollResult < 0 || rollResult > 10) {
+                throw new IllegalArgumentException("Invalid score for the roll");
+            }
             Player currentPlayer = bowlingScoreBoared.getCurrentPlayer();
-            FRAME_ROW_UTIL.playerRoll(currentPlayer.getPlayerFrames(), rollResult);
+            frameRowUtil.playerRoll(currentPlayer.getPlayerFrames(), rollResult);
             Frame frame = currentPlayer.getPlayerFrames().getCurrentFrame();
             if (frame instanceof TenthFrame) {
                 TenthFrameUtil tenthFrameUtil = new TenthFrameUtil();
                 if (tenthFrameUtil.isFrameComplete((TenthFrame) (frame))) {
-                    if (FRAME_ROW_UTIL.getSize(currentPlayer.getPlayerFrames()) < 10) {
-                        FRAME_ROW_UTIL.startNewFrame(currentPlayer.getPlayerFrames());
+                    if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < 10) {
+                        frameRowUtil.startNewFrame(currentPlayer.getPlayerFrames());
                     }
                     changeTurn(bowlingScoreBoared);
                 }
             } else {
                 RegularFrameUtil regularFrameUtil = new RegularFrameUtil();
                 if (regularFrameUtil.isFrameComplete((RegularFrame) (frame))) {
-                    if (FRAME_ROW_UTIL.getSize(currentPlayer.getPlayerFrames()) < 10) {
-                        FRAME_ROW_UTIL.startNewFrame(currentPlayer.getPlayerFrames());
+                    if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < 10) {
+                        frameRowUtil.startNewFrame(currentPlayer.getPlayerFrames());
                     }
                     changeTurn(bowlingScoreBoared);
                 }

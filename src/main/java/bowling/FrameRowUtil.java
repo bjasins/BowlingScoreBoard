@@ -46,6 +46,22 @@ public class FrameRowUtil {
     }
 
     /**
+     * @return the {@link RegularFrameUtil} the FrameRowUtil is
+     * configured with.
+     */
+    protected RegularFrameUtil getRegularFrameUtil() {
+        return regularFrameUtil;
+    }
+
+    /**
+     * @return the {@link TenthFrameUtil} the FrameRowUtil is
+     * configured with.
+     */
+    protected TenthFrameUtil getTenthFrameUtil() {
+        return tenthFrameUtil;
+    }
+
+    /**
      * Calculates the total score of the row, taking into consideration the rules
      * regarding spares and strikes. If a spare is scored, the next roll is also
      * added to the current frame's score. If a strike is scored, the next two rolls

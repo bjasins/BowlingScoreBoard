@@ -73,12 +73,12 @@ public class BowlingScoreBoardUtil {
             frameRowUtil.playerRoll(currentPlayer.getPlayerFrames(), rollResult);
             Frame frame = currentPlayer.getPlayerFrames().getCurrentFrame();
             if (frame instanceof TenthFrame) {
-                TenthFrameUtil tenthFrameUtil = new TenthFrameUtil();
+                TenthFrameUtil tenthFrameUtil = frameRowUtil.getTenthFrameUtil();
                 if (tenthFrameUtil.isFrameComplete((TenthFrame) (frame))) {
                     changeTurn(bowlingScoreBoared);
                 }
             } else {
-                RegularFrameUtil regularFrameUtil = new RegularFrameUtil();
+                RegularFrameUtil regularFrameUtil = frameRowUtil.getRegularFrameUtil();
                 if (regularFrameUtil.isFrameComplete((RegularFrame) (frame))) {
                     if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < 10) {
                         frameRowUtil.startNewFrame(currentPlayer.getPlayerFrames());

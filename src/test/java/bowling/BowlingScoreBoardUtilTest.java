@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +21,8 @@ import exceptions.BowlingScoreBoardException;
 import pojos.BowlingScoreBoard;
 import pojos.FrameRow;
 import pojos.Player;
+import pojos.RegularFrame;
+import pojos.TenthFrame;
 
 public class BowlingScoreBoardUtilTest {
     private BowlingScoreBoardUtil bowlingScoreBoardUtil;
@@ -100,26 +103,80 @@ public class BowlingScoreBoardUtilTest {
         bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 5);
     }
     @Test
-    public void testInputRollTenthFrameComplete() {
+    public void testInputRollTenthFrameComplete() throws BowlingScoreBoardException {
         Player mockPlayer = Mockito.mock(Player.class);
         when(mockBowlingScoreBoard.getCurrentPlayer()).thenReturn(mockPlayer);
         FrameRow mockFrameRow = Mockito.mock(FrameRow.class);
         when(mockPlayer.getPlayerFrames()).thenReturn(mockFrameRow);
+        TenthFrame mockFrame = Mockito.mock(TenthFrame.class);
+        when(mockFrameRow.getCurrentFrame()).thenReturn(mockFrame);
         Mockito.doNothing().when(mockFrameRowUtil).playerRoll(eq(mockFrameRow), eq(5));
+        TenthFrameUtil mockTenthFrameUtil = Mockito.mock(TenthFrameUtil.class);
+        when(mockFrameRowUtil.getTenthFrameUtil()).thenReturn(mockTenthFrameUtil);
+        when(mockTenthFrameUtil.isFrameComplete(mockFrame)).thenReturn(true);
+        when(mockBowlingScoreBoard.getPlayerTurnIndex()).thenReturn(0);
+        when(mockBowlingScoreBoard.getPlayers()).thenReturn(Arrays.asList(mockPlayer));
+        bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 5);
+        verify(mockTenthFrameUtil).isFrameComplete(mockFrame);
+        verify(mockBowlingScoreBoard).resetPlayerTurnIndex();
     }
 
     @Test
-    public void testInputRollTenthFrameNotComplete() {
-        // TODO
+    public void testInputRollTenthFrameNotComplete() throws BowlingScoreBoardException {
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockBowlingScoreBoard.getCurrentPlayer()).thenReturn(mockPlayer);
+        FrameRow mockFrameRow = Mockito.mock(FrameRow.class);
+        when(mockPlayer.getPlayerFrames()).thenReturn(mockFrameRow);
+        TenthFrame mockFrame = Mockito.mock(TenthFrame.class);
+        when(mockFrameRow.getCurrentFrame()).thenReturn(mockFrame);
+        Mockito.doNothing().when(mockFrameRowUtil).playerRoll(eq(mockFrameRow), eq(5));
+        TenthFrameUtil mockTenthFrameUtil = Mockito.mock(TenthFrameUtil.class);
+        when(mockFrameRowUtil.getTenthFrameUtil()).thenReturn(mockTenthFrameUtil);
+        when(mockTenthFrameUtil.isFrameComplete(mockFrame)).thenReturn(false);
+        bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 5);
+        verify(mockTenthFrameUtil).isFrameComplete(mockFrame);
+        verify(mockBowlingScoreBoard, never()).getPlayerTurnIndex();
     }
 
     @Test
-    public void testInputRollRegularFrameComplete() {
-        // TODO
+    public void testInputRollRegularFrameComplete() throws BowlingScoreBoardException {
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockBowlingScoreBoard.getCurrentPlayer()).thenReturn(mockPlayer);
+        FrameRow mockFrameRow = Mockito.mock(FrameRow.class);
+        when(mockPlayer.getPlayerFrames()).thenReturn(mockFrameRow);
+        RegularFrame mockFrame = Mockito.mock(RegularFrame.class);
+        when(mockFrameRow.getCurrentFrame()).thenReturn(mockFrame);
+        Mockito.doNothing().when(mockFrameRowUtil).playerRoll(eq(mockFrameRow), eq(5));
+
+        RegularFrameUtil mockRegularFrameUtil = Mockito.mock(RegularFrameUtil.class);
+        when(mockFrameRowUtil.getRegularFrameUtil()).thenReturn(mockRegularFrameUtil);
+        when(mockRegularFrameUtil.isFrameComplete(mockFrame)).thenReturn(true);
+        Mockito.doNothing().when(mockFrameRowUtil).startNewFrame(mockFrameRow);
+        when(mockBowlingScoreBoard.getPlayerTurnIndex()).thenReturn(0);
+        when(mockBowlingScoreBoard.getPlayers()).thenReturn(Arrays.asList(mockPlayer));
+        bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 5);
+        verify(mockRegularFrameUtil).isFrameComplete(mockFrame);
+        verify(mockFrameRowUtil).startNewFrame(mockFrameRow);
+        verify(mockBowlingScoreBoard).resetPlayerTurnIndex();
     }
 
     @Test
-    public void testInputRollRegularFrameNotComplete() {
-        // TODO
+    public void testInputRollRegularFrameNotComplete() throws BowlingScoreBoardException {
+        Player mockPlayer = Mockito.mock(Player.class);
+        when(mockBowlingScoreBoard.getCurrentPlayer()).thenReturn(mockPlayer);
+        FrameRow mockFrameRow = Mockito.mock(FrameRow.class);
+        when(mockPlayer.getPlayerFrames()).thenReturn(mockFrameRow);
+        RegularFrame mockFrame = Mockito.mock(RegularFrame.class);
+        when(mockFrameRow.getCurrentFrame()).thenReturn(mockFrame);
+        Mockito.doNothing().when(mockFrameRowUtil).playerRoll(eq(mockFrameRow), eq(5));
+
+        RegularFrameUtil mockRegularFrameUtil = Mockito.mock(RegularFrameUtil.class);
+        when(mockFrameRowUtil.getRegularFrameUtil()).thenReturn(mockRegularFrameUtil);
+        when(mockRegularFrameUtil.isFrameComplete(mockFrame)).thenReturn(false);
+
+        bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 5);
+        verify(mockRegularFrameUtil).isFrameComplete(mockFrame);
+        verify(mockFrameRowUtil, never()).startNewFrame(mockFrameRow);
+        verify(mockBowlingScoreBoard, never()).resetPlayerTurnIndex();
     }
 }

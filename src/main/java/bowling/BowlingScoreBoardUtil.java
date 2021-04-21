@@ -75,9 +75,6 @@ public class BowlingScoreBoardUtil {
             if (frame instanceof TenthFrame) {
                 TenthFrameUtil tenthFrameUtil = new TenthFrameUtil();
                 if (tenthFrameUtil.isFrameComplete((TenthFrame) (frame))) {
-                    if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < 10) {
-                        frameRowUtil.startNewFrame(currentPlayer.getPlayerFrames());
-                    }
                     changeTurn(bowlingScoreBoared);
                 }
             } else {

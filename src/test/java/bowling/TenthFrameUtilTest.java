@@ -18,6 +18,9 @@ import pojos.TenthFrame;
 
 public class TenthFrameUtilTest {
 
+    private static final int MAX_ROLLS_ALLOWED =3;
+    private static final int NORMAL_ROLLS_ALLOWED =2;
+    private static final int SCORE_TO_UNLOCK_EXTRA_ROLL =10;
     private TenthFrameUtil tenthFrameUtil;
 
     @Mock
@@ -27,9 +30,9 @@ public class TenthFrameUtilTest {
     public void setup() {
         tenthFrameUtil = new TenthFrameUtil();
         mockTenthFrame = Mockito.mock(TenthFrame.class);
-        when(mockTenthFrame.getMaxRollsAllowed()).thenReturn(3);
-        when(mockTenthFrame.getNormalRollsAllowed()).thenReturn(2);
-        when(mockTenthFrame.getMinimumScoreToUnlockMaxRolls()).thenReturn(10);
+        when(mockTenthFrame.getMaxRollsAllowed()).thenReturn(MAX_ROLLS_ALLOWED);
+        when(mockTenthFrame.getNormalRollsAllowed()).thenReturn(NORMAL_ROLLS_ALLOWED);
+        when(mockTenthFrame.getMinimumScoreToUnlockMaxRolls()).thenReturn(SCORE_TO_UNLOCK_EXTRA_ROLL);
     }
 
     @After

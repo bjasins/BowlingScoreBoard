@@ -2,7 +2,6 @@ package bowling;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -25,6 +24,7 @@ import pojos.RegularFrame;
 import pojos.TenthFrame;
 
 public class FrameRowUtilTest {
+    private static final int NUMBER_OF_REGULAR_FRAMES=9;
     private FrameRowUtil frameRowUtil;
     @Mock
     private FrameRow mockFrameRow;
@@ -52,8 +52,8 @@ public class FrameRowUtilTest {
 
     @Test
     public void testIsRowCompleteTrue() {
-        List<Frame> mockFrames = new ArrayList<>(10);
-        for (int i = 0; i < 9; i++) {
+        List<Frame> mockFrames = new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_REGULAR_FRAMES; i++) {
             mockFrames.add(null);
         }
         TenthFrame mockFrame = Mockito.mock(TenthFrame.class);
@@ -74,7 +74,7 @@ public class FrameRowUtilTest {
     @Test
     public void testIsRowCompleteFalseIncompleteTenth() {
         List<Frame> mockFrames = new ArrayList<>(10);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < NUMBER_OF_REGULAR_FRAMES; i++) {
             mockFrames.add(null);
         }
         TenthFrame mockFrame = Mockito.mock(TenthFrame.class);
@@ -97,23 +97,29 @@ public class FrameRowUtilTest {
         List<Frame> mockFrames = new ArrayList<>();
 
         RegularFrame mockFirstFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(8);
+        int firstFrameScore = 8;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(firstFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFirstFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockFirstFrame)).thenReturn(false);
         mockFrames.add(mockFirstFrame);
+
         RegularFrame mockSecondFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(4);
+        int secondFrameScore = 4;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(secondFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSecondFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSecondFrame)).thenReturn(false);
         mockFrames.add(mockSecondFrame);
+
         RegularFrame mockThirdFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(5);
+        int thirdFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(thirdFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockThirdFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockThirdFrame)).thenReturn(false);
         mockFrames.add(mockThirdFrame);
 
         when(mockFrameRow.getFrames()).thenReturn(mockFrames);
-        assertEquals(17, frameRowUtil.getTotalScore(mockFrameRow));
+        int finalExpectedScore = firstFrameScore + secondFrameScore + thirdFrameScore;
+        assertEquals(finalExpectedScore, frameRowUtil.getTotalScore(mockFrameRow));
     }
 
     @Test
@@ -122,100 +128,123 @@ public class FrameRowUtilTest {
         List<Frame> mockFrames = new ArrayList<>();
 
         RegularFrame mockFirstFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(10);// 10
+        int firstFrameScore = 10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(firstFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFirstFrame)).thenReturn(true);
         when(mockRegularFrameUtil.isFrameSpare(mockFirstFrame)).thenReturn(false);
         mockFrames.add(mockFirstFrame);
+
         RegularFrame mockSecondFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(9);// 5, 4
+        int secondFrameScore = 9;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(secondFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSecondFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSecondFrame)).thenReturn(false);
         mockFrames.add(mockSecondFrame);
+
         RegularFrame mockThirdFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(10);// 9, 1
+        int thirdFrameScore = 10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(thirdFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockThirdFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockThirdFrame)).thenReturn(true);
         mockFrames.add(mockThirdFrame);
 
         RegularFrame mockFourthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFourthFrame)).thenReturn(6);// 3, 3
+        int fourthFrameScore = 6;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFourthFrame)).thenReturn(fourthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFourthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockFourthFrame)).thenReturn(false);
-        when(mockFourthFrame.getRollResultList()).thenReturn(Arrays.asList(3, 3));
+        int fourthFrameRoll = 3;
+        when(mockFourthFrame.getRollResultList()).thenReturn(Arrays.asList(fourthFrameRoll, fourthFrameRoll));
         mockFrames.add(mockFourthFrame);
 
         when(mockFrameRow.getFrames()).thenReturn(mockFrames);
-        assertEquals(47, frameRowUtil.getTotalScore(mockFrameRow));
+        int finalExpectedScore = (firstFrameScore+secondFrameScore) + secondFrameScore + (thirdFrameScore + fourthFrameRoll) + fourthFrameScore;
+        assertEquals(finalExpectedScore, frameRowUtil.getTotalScore(mockFrameRow));
     }
 
     @Test
     public void testGetTotalScoreCompleteRowTenthFrameSpare() {
-        //// TODO
-
         List<Frame> mockFrames = new ArrayList<>();
 
         RegularFrame mockFirstFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(10);// 10
+        int firstFrameScore = 10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(firstFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFirstFrame)).thenReturn(true);
         when(mockRegularFrameUtil.isFrameSpare(mockFirstFrame)).thenReturn(false);
         mockFrames.add(mockFirstFrame);
+
         RegularFrame mockSecondFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(9);// 5, 4
+        int secondFrameScore = 9;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(secondFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSecondFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSecondFrame)).thenReturn(false);
         mockFrames.add(mockSecondFrame);
+
         RegularFrame mockThirdFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(10);// 9, 1
+        int thirdFrameScore = 10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(thirdFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockThirdFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockThirdFrame)).thenReturn(true);
         mockFrames.add(mockThirdFrame);
 
         RegularFrame mockFourthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFourthFrame)).thenReturn(6);// 3, 3
+        int fourthFrameScore = 6;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFourthFrame)).thenReturn(fourthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFourthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockFourthFrame)).thenReturn(false);
-        when(mockFourthFrame.getRollResultList()).thenReturn(Arrays.asList(3, 3));
-        mockFrames.add(mockFourthFrame);// 47
+        int fourthFrameRoll = 3;
+        when(mockFourthFrame.getRollResultList()).thenReturn(Arrays.asList(fourthFrameRoll, fourthFrameRoll));
+        mockFrames.add(mockFourthFrame);
 
         RegularFrame mockFifthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFifthFrame)).thenReturn(5);
+        int fifthFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFifthFrame)).thenReturn(fifthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFifthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockFifthFrame)).thenReturn(false);
         mockFrames.add(mockFifthFrame);
 
         RegularFrame mockSixthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSixthFrame)).thenReturn(5);
+        int sixthFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSixthFrame)).thenReturn(sixthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSixthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSixthFrame)).thenReturn(false);
         mockFrames.add(mockSixthFrame);
 
         RegularFrame mockSeventhFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSeventhFrame)).thenReturn(5);
+        int seventhFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSeventhFrame)).thenReturn(seventhFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSeventhFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSeventhFrame)).thenReturn(false);
         mockFrames.add(mockSeventhFrame);
 
         RegularFrame mockEighthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockEighthFrame)).thenReturn(5);
+        int eighthFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockEighthFrame)).thenReturn(eighthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockEighthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockEighthFrame)).thenReturn(false);
         mockFrames.add(mockEighthFrame);
 
         RegularFrame mockNinthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockNinthFrame)).thenReturn(10);
+        int ninthFrameScore=10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockNinthFrame)).thenReturn(ninthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockNinthFrame)).thenReturn(true);
         when(mockRegularFrameUtil.isFrameSpare(mockNinthFrame)).thenReturn(false);
-        mockFrames.add(mockNinthFrame);// 77
+        mockFrames.add(mockNinthFrame);
 
         TenthFrame mockTenthFrame = Mockito.mock(TenthFrame.class);
-        when(mockTenthFrameUtil.getFinalFrameScore(mockTenthFrame)).thenReturn(14);
+        int tenthFrameScore = 14;
+        when(mockTenthFrameUtil.getFinalFrameScore(mockTenthFrame)).thenReturn(tenthFrameScore);
         when(mockTenthFrameUtil.isFrameStrike(mockTenthFrame)).thenReturn(false);
         when(mockTenthFrameUtil.isFrameSpare(mockTenthFrame)).thenReturn(true);
-        when(mockTenthFrame.getRollResultList()).thenReturn(Arrays.asList(7, 3, 4));
+        int tenthFrameRollOne = 7;
+        int tenthFrameRollTwo = 3;
+        when(mockTenthFrame.getRollResultList()).thenReturn(Arrays.asList(tenthFrameRollOne, tenthFrameRollTwo, 4));
         mockFrames.add(mockTenthFrame);
 
         when(mockFrameRow.getFrames()).thenReturn(mockFrames);
-        assertEquals(101, frameRowUtil.getTotalScore(mockFrameRow));
+        int finalExpectedScore = (firstFrameScore+secondFrameScore) + secondFrameScore + (thirdFrameScore + fourthFrameRoll) + fourthFrameScore
+            + fifthFrameScore + sixthFrameScore + seventhFrameScore + eighthFrameScore + (ninthFrameScore+tenthFrameRollOne+tenthFrameRollTwo)+tenthFrameScore;
+        assertEquals(finalExpectedScore, frameRowUtil.getTotalScore(mockFrameRow));
     }
 
     @Test
@@ -223,73 +252,89 @@ public class FrameRowUtilTest {
         List<Frame> mockFrames = new ArrayList<>();
 
         RegularFrame mockFirstFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(10);// 10
+        int firstFrameScore = 10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFirstFrame)).thenReturn(firstFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFirstFrame)).thenReturn(true);
         when(mockRegularFrameUtil.isFrameSpare(mockFirstFrame)).thenReturn(false);
         mockFrames.add(mockFirstFrame);
+
         RegularFrame mockSecondFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(9);// 5, 4
+        int secondFrameScore = 9;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSecondFrame)).thenReturn(secondFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSecondFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSecondFrame)).thenReturn(false);
         mockFrames.add(mockSecondFrame);
+
         RegularFrame mockThirdFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(10);// 9, 1
+        int thirdFrameScore = 10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockThirdFrame)).thenReturn(thirdFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockThirdFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockThirdFrame)).thenReturn(true);
         mockFrames.add(mockThirdFrame);
 
         RegularFrame mockFourthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFourthFrame)).thenReturn(6);// 3, 3
+        int fourthFrameScore = 6;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFourthFrame)).thenReturn(fourthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFourthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockFourthFrame)).thenReturn(false);
-        when(mockFourthFrame.getRollResultList()).thenReturn(Arrays.asList(3, 3));
-        mockFrames.add(mockFourthFrame);// 47
+        int fourthFrameRoll = 3;
+        when(mockFourthFrame.getRollResultList()).thenReturn(Arrays.asList(fourthFrameRoll, fourthFrameRoll));
+        mockFrames.add(mockFourthFrame);
 
         RegularFrame mockFifthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockFifthFrame)).thenReturn(5);
+        int fifthFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockFifthFrame)).thenReturn(fifthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockFifthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockFifthFrame)).thenReturn(false);
         mockFrames.add(mockFifthFrame);
 
         RegularFrame mockSixthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSixthFrame)).thenReturn(5);
+        int sixthFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSixthFrame)).thenReturn(sixthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSixthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSixthFrame)).thenReturn(false);
         mockFrames.add(mockSixthFrame);
 
         RegularFrame mockSeventhFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockSeventhFrame)).thenReturn(5);
+        int seventhFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockSeventhFrame)).thenReturn(seventhFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockSeventhFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockSeventhFrame)).thenReturn(false);
         mockFrames.add(mockSeventhFrame);
 
         RegularFrame mockEighthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockEighthFrame)).thenReturn(5);
+        int eighthFrameScore = 5;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockEighthFrame)).thenReturn(eighthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockEighthFrame)).thenReturn(false);
         when(mockRegularFrameUtil.isFrameSpare(mockEighthFrame)).thenReturn(false);
         mockFrames.add(mockEighthFrame);
 
         RegularFrame mockNinthFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrameUtil.getFinalFrameScore(mockNinthFrame)).thenReturn(10);
+        int ninthFrameScore = 10;
+        when(mockRegularFrameUtil.getFinalFrameScore(mockNinthFrame)).thenReturn(ninthFrameScore);
         when(mockRegularFrameUtil.isFrameStrike(mockNinthFrame)).thenReturn(true);
         when(mockRegularFrameUtil.isFrameSpare(mockNinthFrame)).thenReturn(false);
-        mockFrames.add(mockNinthFrame);// 77
+        mockFrames.add(mockNinthFrame);
 
         TenthFrame mockTenthFrame = Mockito.mock(TenthFrame.class);
-        when(mockTenthFrameUtil.getFinalFrameScore(mockTenthFrame)).thenReturn(30);
+        int tenthFrameScore = 30;
+        when(mockTenthFrameUtil.getFinalFrameScore(mockTenthFrame)).thenReturn(tenthFrameScore);
         when(mockTenthFrameUtil.isFrameStrike(mockTenthFrame)).thenReturn(false);
         when(mockTenthFrameUtil.isFrameSpare(mockTenthFrame)).thenReturn(true);
-        when(mockTenthFrame.getRollResultList()).thenReturn(Arrays.asList(10, 10, 10));
+        int tenthFrameRoll = 10;
+        when(mockTenthFrame.getRollResultList()).thenReturn(Arrays.asList(tenthFrameRoll, tenthFrameRoll, tenthFrameRoll));
         mockFrames.add(mockTenthFrame);
 
         when(mockFrameRow.getFrames()).thenReturn(mockFrames);
-        assertEquals(127, frameRowUtil.getTotalScore(mockFrameRow));
+        int finalExpectedScore = (firstFrameScore+secondFrameScore) + secondFrameScore + (thirdFrameScore + fourthFrameRoll) + fourthFrameScore
+        + fifthFrameScore + sixthFrameScore + seventhFrameScore + eighthFrameScore + (ninthFrameScore+tenthFrameRoll+tenthFrameRoll)+tenthFrameScore;
+        assertEquals(finalExpectedScore, frameRowUtil.getTotalScore(mockFrameRow));
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartNewFrameRowAlreadyComplete() {
         List<Frame> mockFrames = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < NUMBER_OF_REGULAR_FRAMES; i++) {
             mockFrames.add(null);
         }
         TenthFrame mockFrame = Mockito.mock(TenthFrame.class);
@@ -302,7 +347,7 @@ public class FrameRowUtilTest {
     @Test
     public void testStartNewFrameTenthFrame() {
         List<Frame> mockFrames = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < NUMBER_OF_REGULAR_FRAMES; i++) {
             mockFrames.add(null);
         }
         when(mockFrameRow.getFrames()).thenReturn(mockFrames);
@@ -332,7 +377,7 @@ public class FrameRowUtilTest {
     @Test(expected = IllegalStateException.class)
     public void testPlayerRollFrameAlreadyCompleteTenth() {
         List<Frame> mockFrames = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < NUMBER_OF_REGULAR_FRAMES; i++) {
             mockFrames.add(null);
         }
         TenthFrame mockTenthFrame = Mockito.mock(TenthFrame.class);

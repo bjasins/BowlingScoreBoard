@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import pojos.RegularFrame;
 
 public class RegularFrameUtilTest {
+    private static final int MAX_ROLLS_ALLOWED =2;
     private RegularFrameUtil regularFrameUtil;
     @Mock
     private RegularFrame mockRegularFrame;
@@ -25,7 +26,7 @@ public class RegularFrameUtilTest {
     public void setup() {
         regularFrameUtil = new RegularFrameUtil();
         mockRegularFrame = Mockito.mock(RegularFrame.class);
-        when(mockRegularFrame.getMaxRollsAllowed()).thenReturn(2);
+        when(mockRegularFrame.getMaxRollsAllowed()).thenReturn(MAX_ROLLS_ALLOWED);
     }
 
     @After

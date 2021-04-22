@@ -47,7 +47,8 @@ public class TenthFrameUtil implements FrameUtil<TenthFrame> {
             throw new IllegalStateException("Frame has already been completed");
         }
         if (rollResult < MINIMUM_VALID_ROLL_SCORE || rollResult > MAX_VALID_ROLL_SCORE) {
-            throw new IllegalArgumentException("Individual frame roll must result in " + MINIMUM_VALID_ROLL_SCORE + "-"+ MAX_VALID_ROLL_SCORE+" pins");
+            throw new IllegalArgumentException("Individual frame roll must result in " + MINIMUM_VALID_ROLL_SCORE + "-"
+                    + MAX_VALID_ROLL_SCORE + " pins");
         }
         tenthFrame.getRollResultList().add(rollResult);
     }

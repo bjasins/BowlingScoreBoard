@@ -18,8 +18,6 @@ public class FrameRowUtil {
     private final static int SPARE_BONUS_TRIES = 1;
     private final RegularFrameUtil regularFrameUtil;
     private final TenthFrameUtil tenthFrameUtil;
-    
-
 
     public FrameRowUtil(RegularFrameUtil regularFrameUtil, TenthFrameUtil tenthFrameUtil) {
         this.regularFrameUtil = regularFrameUtil;
@@ -27,10 +25,9 @@ public class FrameRowUtil {
     }
 
     /**
-     * @return an int representing the number of frames
-     * allowed for a row.
+     * @return an int representing the number of frames allowed for a row.
      */
-    protected static int getNumberOfFramesAllowed(){
+    protected static int getNumberOfFramesAllowed() {
         return NUMBER_OF_FRAMES_ALLOWED;
     }
 
@@ -51,20 +48,19 @@ public class FrameRowUtil {
     }
 
     /**
-     * @return the {@link RegularFrameUtil} the FrameRowUtil is
-     * configured with.
+     * @return the {@link RegularFrameUtil} the FrameRowUtil is configured with.
      */
     protected RegularFrameUtil getRegularFrameUtil() {
         return regularFrameUtil;
     }
 
     /**
-     * @return the {@link TenthFrameUtil} the FrameRowUtil is
-     * configured with.
+     * @return the {@link TenthFrameUtil} the FrameRowUtil is configured with.
      */
     protected TenthFrameUtil getTenthFrameUtil() {
         return tenthFrameUtil;
     }
+
     /**
      * @param frameRow the {@code FrameRow} to evaluate.
      * @return a boolean signifying if the row of frames is completed.
@@ -135,10 +131,11 @@ public class FrameRowUtil {
      * @param rollResult an int representing the score of the roll.
      * @throws {@code IllegalStateException} if the frame has already been
      * completed.
-     * @throws {@code IllegalArgumentException} if the roll score is not
-     * within a valid range.
+     * @throws {@code IllegalArgumentException} if the roll score is not within a
+     * valid range.
      */
-    protected void playerRoll(FrameRow framerow, int rollResult) throws IllegalStateException, IllegalArgumentException {
+    protected void playerRoll(FrameRow framerow, int rollResult)
+            throws IllegalStateException, IllegalArgumentException {
         if (rollResult < MINIMUM_VALID_ROLL_SCORE || rollResult > MAX_VALID_ROLL_SCORE) {
             throw new IllegalArgumentException("Invalid score for the roll");
         }
@@ -175,14 +172,17 @@ public class FrameRowUtil {
             throw new IllegalArgumentException("startIndex must be within valid range");
         }
         if (numberToLookForward != SPARE_BONUS_TRIES && numberToLookForward != STRIKE_BONUS_TRIES) {
-            throw new IllegalArgumentException("numberToLookForward must be either " + SPARE_BONUS_TRIES + " or " + STRIKE_BONUS_TRIES);
+            throw new IllegalArgumentException(
+                    "numberToLookForward must be either " + SPARE_BONUS_TRIES + " or " + STRIKE_BONUS_TRIES);
         }
         if (startIndex == framerow.getFrames().size() - 1) {
             return 0;
         }
         Frame frame = framerow.getFrames().get(startIndex + 1);
         if (frame instanceof TenthFrame) {
-            return numberToLookForward == STRIKE_BONUS_TRIES ? frame.getRollResultList().get(0) + frame.getRollResultList().get(1) : frame.getRollResultList().get(0);
+            return numberToLookForward == STRIKE_BONUS_TRIES
+                    ? frame.getRollResultList().get(0) + frame.getRollResultList().get(1)
+                    : frame.getRollResultList().get(0);
         } else {
             if (numberToLookForward == STRIKE_BONUS_TRIES && regularFrameUtil.isFrameStrike((RegularFrame) frame)) {
                 return 10 + peakNextFrame(framerow, startIndex + 1, STRIKE_BONUS_TRIES - 1);

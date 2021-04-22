@@ -88,7 +88,7 @@ public class BowlingScoreBoardUtilTest {
         verify(mockBowlingScoreBoard).addPlayer(any(Player.class));
         verify(mockBowlingScoreBoard).resetPlayerTurnIndex();
     }
-    @Test(expected = BowlingScoreBoardException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testInputRollInvalidEntry() throws BowlingScoreBoardException {
         bowlingScoreBoardUtil.inputRoll(mockBowlingScoreBoard, 12);
     }

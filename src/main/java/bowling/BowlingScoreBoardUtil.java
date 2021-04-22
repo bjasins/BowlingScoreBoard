@@ -63,14 +63,17 @@ public class BowlingScoreBoardUtil {
      * 
      * @param bowlingScoreBoared the {@link BowlingScoreBoard} to evaluate.
      * @param rollResult         an int representing the score of the roll.
+     * @throws {@link IllegalArgumentException} if the provided roll result is
+     *                invalid
      * @throws {@link BowlingScoreBoardException} if an error occurs during
      *                processing.
      */
-    public void inputRoll(BowlingScoreBoard bowlingScoreBoared, int rollResult) throws BowlingScoreBoardException {
+    public void inputRoll(BowlingScoreBoard bowlingScoreBoared, int rollResult)
+            throws BowlingScoreBoardException, IllegalArgumentException {
+        if (rollResult < MINIMUM_VALID_ROLL_SCORE || rollResult > MAX_VALID_ROLL_SCORE) {
+            throw new IllegalArgumentException("Invalid score for the roll");
+        }
         try {
-            if (rollResult < MINIMUM_VALID_ROLL_SCORE || rollResult > MAX_VALID_ROLL_SCORE) {
-                throw new IllegalArgumentException("Invalid score for the roll");
-            }
             Player currentPlayer = bowlingScoreBoared.getCurrentPlayer();
             frameRowUtil.playerRoll(currentPlayer.getPlayerFrames(), rollResult);
             Frame frame = currentPlayer.getPlayerFrames().getCurrentFrame();
@@ -82,7 +85,8 @@ public class BowlingScoreBoardUtil {
             } else {
                 RegularFrameUtil regularFrameUtil = frameRowUtil.getRegularFrameUtil();
                 if (regularFrameUtil.isFrameComplete((RegularFrame) (frame))) {
-                    if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < FrameRowUtil.getNumberOfFramesAllowed()) {
+                    if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < FrameRowUtil
+                            .getNumberOfFramesAllowed()) {
                         frameRowUtil.startNewFrame(currentPlayer.getPlayerFrames());
                     }
                     changeTurn(bowlingScoreBoared);

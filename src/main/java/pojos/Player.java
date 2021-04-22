@@ -1,6 +1,8 @@
 package pojos;
 
 import bowling.FrameRowUtil;
+import bowling.RegularFrameUtil;
+import bowling.TenthFrameUtil;
 
 /**
  * A POJO meant to represent an individual player.
@@ -19,7 +21,9 @@ public class Player {
      * @return the total score of the player.
      */
     public int getScore() {
-        FrameRowUtil frameRowUtil = new FrameRowUtil();
+        RegularFrameUtil regularFrameUtil = new RegularFrameUtil();
+        TenthFrameUtil tenthFrameUtil = new TenthFrameUtil();
+        FrameRowUtil frameRowUtil = new FrameRowUtil(regularFrameUtil, tenthFrameUtil);
         return frameRowUtil.getTotalScore(frames);
     }
 

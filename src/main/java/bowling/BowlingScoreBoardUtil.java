@@ -6,6 +6,8 @@ import pojos.BowlingScoreBoard;
 import pojos.Player;
 import pojos.RegularFrame;
 import pojos.TenthFrame;
+import static interfaces.Frame.MAX_VALID_ROLL_SCORE;
+import static interfaces.Frame.MINIMUM_VALID_ROLL_SCORE;
 
 /**
  * Provides the functionality for interacting with a {@link BowlingScoreBoard}.
@@ -66,7 +68,7 @@ public class BowlingScoreBoardUtil {
      */
     public void inputRoll(BowlingScoreBoard bowlingScoreBoared, int rollResult) throws BowlingScoreBoardException {
         try {
-            if (rollResult < 0 || rollResult > 10) {
+            if (rollResult < MINIMUM_VALID_ROLL_SCORE || rollResult > MAX_VALID_ROLL_SCORE) {
                 throw new IllegalArgumentException("Invalid score for the roll");
             }
             Player currentPlayer = bowlingScoreBoared.getCurrentPlayer();
@@ -80,7 +82,7 @@ public class BowlingScoreBoardUtil {
             } else {
                 RegularFrameUtil regularFrameUtil = frameRowUtil.getRegularFrameUtil();
                 if (regularFrameUtil.isFrameComplete((RegularFrame) (frame))) {
-                    if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < 10) {
+                    if (frameRowUtil.getSize(currentPlayer.getPlayerFrames()) < FrameRowUtil.getNumberOfFramesAllowed()) {
                         frameRowUtil.startNewFrame(currentPlayer.getPlayerFrames());
                     }
                     changeTurn(bowlingScoreBoared);

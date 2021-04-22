@@ -13,7 +13,7 @@ import java.util.List;
 public class TenthFrame implements Frame {
 
     private static final int MAX_ROLLS_ALLOWED = 3;
-    private static final int NORMAL_ROLLS_ALLOWED = 2; // general class
+    private static final int NORMAL_ROLLS_ALLOWED = 2;
     private static final int MINIMUM_SCORE_TO_UNLOCK_MAX_ROLLS = 10;
 
     private final List<Integer> rollResultList;
